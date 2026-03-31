@@ -69,7 +69,6 @@ export function ToolsTable({ tools, onRefresh }: ToolsTableProps) {
               <TableHead className="text-muted-foreground font-semibold">Código</TableHead>
               <TableHead className="text-muted-foreground font-semibold">Nombre</TableHead>
               <TableHead className="text-muted-foreground font-semibold">Categoría</TableHead>
-              <TableHead className="text-muted-foreground font-semibold text-center">Cantidad</TableHead>
               <TableHead className="text-muted-foreground font-semibold">Estado</TableHead>
               <TableHead className="text-muted-foreground font-semibold">Ubicación</TableHead>
               <TableHead className="text-muted-foreground font-semibold w-[50px]"></TableHead>
@@ -79,9 +78,17 @@ export function ToolsTable({ tools, onRefresh }: ToolsTableProps) {
             {tools.map((tool) => (
               <TableRow key={tool.id} className="border-border hover:bg-muted/30">
                 <TableCell className="font-mono text-primary font-medium">{tool.code}</TableCell>
-                <TableCell className="font-medium">{tool.name}</TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{tool.name}</span>
+                    {tool.observations && (
+                      <span className="text-xs text-muted-foreground italic mt-0.5">
+                        {tool.observations}
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell className="text-muted-foreground">{tool.category || "—"}</TableCell>
-                <TableCell className="text-center font-semibold">{tool.quantity}</TableCell>
                 <TableCell>
                   <Badge variant="outline" className={statusColors[tool.status]}>
                     {statusLabels[tool.status]}

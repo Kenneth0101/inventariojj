@@ -7,6 +7,7 @@ export interface Tool {
   quantity: number
   status: "disponible" | "en_uso" | "mantenimiento" | "dañado"
   location: string | null
+  observations: string | null
   created_at: Date
   updated_at: Date
 }
@@ -14,9 +15,8 @@ export interface Tool {
 export interface ToolFormData {
   code: string
   name: string
-  description?: string
   category?: string
-  quantity: number
   status: Tool["status"]
   location?: string
+  observations?: string
 }

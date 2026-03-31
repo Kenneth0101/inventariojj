@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Search, Plus, Package, Wrench, AlertTriangle, CheckCircle } from "lucide-react"
+import { Search, Plus, Package, Wrench, AlertTriangle, CheckCircle, Tags } from "lucide-react"
 import { ToolsTable } from "./tools-table"
 import { ToolForm } from "./tool-form"
+import { CategoriesDialog } from "./categories-dialog"
 import { getTools } from "@/app/actions"
 import type { Tool } from "@/lib/types"
 
@@ -14,6 +15,7 @@ export function InventoryDashboard() {
   const [tools, setTools] = useState<Tool[]>([])
   const [search, setSearch] = useState("")
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
   const [loading, setLoading] = useState(true)
 
   const fetchTools = useCallback(async () => {
@@ -31,12 +33,10 @@ export function InventoryDashboard() {
   }, [fetchTools])
 
   const stats = {
-    total: tools.reduce((acc, t) => acc + t.quantity, 0),
-    disponibles: tools.filter((t) => t.status === "disponible").reduce((acc, t) => acc + t.quantity, 0),
-    enUso: tools.filter((t) => t.status === "en_uso").reduce((acc, t) => acc + t.quantity, 0),
-    mantenimiento: tools
-      .filter((t) => t.status === "mantenimiento" || t.status === "dañado")
-      .reduce((acc, t) => acc + t.quantity, 0),
+    total: tools.length,
+    disponibles: tools.filter((t) => t.status === "disponible").length,
+    enUso: tools.filter((t) => t.status === "en_uso").length,
+    mantenimiento: tools.filter((t) => t.status === "mantenimiento" || t.status === "dañado").length,
   }
 
   return (
@@ -52,10 +52,19 @@ export function InventoryDashboard() {
               <p className="text-sm text-muted-foreground">Control de Herramientas</p>
             </div>
           </div>
-          <Button onClick={() => setIsFormOpen(true)} className="bg-primary text-primary-foreground">
-            <Plus className="mr-2 h-4 w-4" />
-            Nueva Herramienta
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setIsCategoriesOpen(true)}
+              className="bg-primary text-primary-foreground"
+            >
+              <Tags className="mr-2 h-4 w-4" />
+              Categorías
+            </Button>
+            <Button onClick={() => setIsFormOpen(true)} className="bg-primary text-primary-foreground">
+              <Plus className="mr-2 h-4 w-4" />
+              Nueva Herramienta
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -130,6 +139,7 @@ export function InventoryDashboard() {
       </main>
 
       <ToolForm open={isFormOpen} onOpenChange={setIsFormOpen} onSuccess={fetchTools} />
+      <CategoriesDialog open={isCategoriesOpen} onOpenChange={setIsCategoriesOpen} />
     </div>
   )
 }
